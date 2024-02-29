@@ -64,7 +64,7 @@ struct free_info            free_req;
 
 /* Init and Exit functions */
 static int __init memalloc_module_init(void) {
-    printk("Hello from the memalloc module!\n");
+    printk("ello from the memalloc module!\n");
     return 0;
 }
 
