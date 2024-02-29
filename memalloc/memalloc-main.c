@@ -34,7 +34,7 @@
 
 /* Simple licensing stuff */
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("student");
+MODULE_AUTHOR("Junha Park");
 MODULE_DESCRIPTION("Project 2, CSE 330 Spring 2024");
 MODULE_VERSION("0.01");
 
