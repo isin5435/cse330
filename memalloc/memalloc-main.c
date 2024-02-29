@@ -94,7 +94,7 @@ static int __init memalloc_module_init(void) {
     }
     printk("[*] Allocated class.\n");
 
-    if((device_create(virtdev_class, NULL, dev, NULL, "memalloc")) == NULL)
+    if((device_create(memalloc_class, NULL, dev, NULL, "memalloc")) == NULL)
     {
         printk("[X] couldn't create device.\n");
         goto classfailed;
