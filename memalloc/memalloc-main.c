@@ -65,7 +65,41 @@ void    memalloc_pte_alloc(pmd_t* pmd, unsigned long vaddr);
 struct alloc_info           alloc_req;
 struct free_info            free_req;
 
-/* Init and Exit functions */
+/* IOCTL handler for vmod. */
+static long memalloc_ioctl(struct file *f, unsigned int cmd, unsigned long arg) {
+    switch (cmd)
+    {
+    case ALLOCATE:    	
+        /* allocate a set of pages */
+        printk("IOCTL: alloc(%lx, %d, %d)\n", alloc_req.vaddr, alloc_req.num_pages, alloc_req.write);
+        break;
+    case FREE:    	
+        /* free allocated pages */
+    	printk("IOCTL: free(%lx)\n", free_req.vaddr);
+    	break;    	
+    default:
+        printk("Error: incorrect IOCTL command.\n");
+        return -1;
+    }
+    return 0;
+}
+
+/* Required file ops. */
+static struct file_operations fops = 
+{
+    .owner          = THIS_MODULE,
+    .unlocked_ioctl = memalloc_ioctl,
+};
+
+/* Initialize the module for IOCTL commands */
+bool memalloc_ioctl_init(void) {
+    return false;
+}
+
+void memalloc_ioctl_teardown(void) {
+    /* Destroy the classes too (IOCTL-specific). */
+}
+
 static int __init memalloc_module_init(void) {
     // printk("Hello from the memalloc module!\n");
     // return 0;
@@ -115,41 +149,6 @@ cdevfailed:
 static void __exit memalloc_module_exit(void) {
     /* Teardown IOCTL */
     printk("Goodbye from the memalloc module!\n");
-}
-
-/* IOCTL handler for vmod. */
-static long memalloc_ioctl(struct file *f, unsigned int cmd, unsigned long arg) {
-    switch (cmd)
-    {
-    case ALLOCATE:    	
-        /* allocate a set of pages */
-        printk("IOCTL: alloc(%lx, %d, %d)\n", alloc_req.vaddr, alloc_req.num_pages, alloc_req.write);
-        break;
-    case FREE:    	
-        /* free allocated pages */
-    	printk("IOCTL: free(%lx)\n", free_req.vaddr);
-    	break;    	
-    default:
-        printk("Error: incorrect IOCTL command.\n");
-        return -1;
-    }
-    return 0;
-}
-
-/* Required file ops. */
-static struct file_operations fops = 
-{
-    .owner          = THIS_MODULE,
-    .unlocked_ioctl = memalloc_ioctl,
-};
-
-/* Initialize the module for IOCTL commands */
-bool memalloc_ioctl_init(void) {
-    return false;
-}
-
-void memalloc_ioctl_teardown(void) {
-    /* Destroy the classes too (IOCTL-specific). */
 }
 
 module_init(memalloc_module_init);
