@@ -69,7 +69,13 @@ struct free_info            free_req;
 static long memalloc_ioctl(struct file *f, unsigned int cmd, unsigned long arg) {
     switch (cmd)
     {
-    case ALLOCATE:    	
+    case ALLOCATE:
+        /* Copy data from user */
+        if(copy_from_user((void*) &alloc_req, (void*) arg, sizeof(struct alloc_info))){
+            printk("Error: User didn't send right message.\n");
+            return -1;
+        }
+    	
         /* allocate a set of pages */
         printk("IOCTL: alloc(%lx, %d, %d)\n", alloc_req.vaddr, alloc_req.num_pages, alloc_req.write);
         break;
